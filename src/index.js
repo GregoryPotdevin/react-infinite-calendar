@@ -259,9 +259,6 @@ export default class InfiniteCalendar extends Component {
 		let {display, selectedDate, highlightedDate, showToday} = this.state;
 		let delta = 0;
 
-		if (typeof onKeyDown == 'function') {
-			onKeyDown(e);
-		}
 		if ([keyCodes.left, keyCodes.up, keyCodes.right, keyCodes.down].indexOf(e.keyCode) > -1 && typeof e.preventDefault == 'function') {
 			e.preventDefault();
 		}
@@ -339,9 +336,17 @@ export default class InfiniteCalendar extends Component {
 					highlightedDate: newHighlightedDate
 				});
 
+				if (typeof onKeyDown == 'function') {
+					onKeyDown(e, moment(newHighlightedDate));
+					onKeyDown = null // already handled
+				}
 			}
 		} else if (display == 'years' && this.refs.years) {
 			this.refs.years.handleKeyDown(e);
+		}
+		
+		if (typeof onKeyDown == 'function') {
+			onKeyDown(e);
 		}
 	};
 	clearHighlight() {
